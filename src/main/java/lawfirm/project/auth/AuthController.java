@@ -60,7 +60,6 @@ public class AuthController {
     public RestResponse token(@RequestParam(value = "username", defaultValue = "") String username, @RequestParam(value = "password",defaultValue = "") String password, HttpServletResponse response) {
 
         User user = userRepository.findByUsername(username);
-
         if (user == null) {
             return new RestResponse("error", null, "user not found");
         } else if (!BCrypt.checkpw(password, user.getPassword())) {
