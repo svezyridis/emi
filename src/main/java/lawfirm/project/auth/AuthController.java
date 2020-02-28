@@ -112,6 +112,16 @@ public class AuthController {
         return new RestResponse("success", roles, null);
     }
 
+    @RequestMapping(value = "/users")
+    public RestResponse getUsers(@CookieValue(value = "jwt", defaultValue = "token") String token) {
+        if (!(validator.simpleValidateToken(token)))
+            return new RestResponse("error", null, "invalid token");
+        List<User> users = userRepository.getAllUsers();
+        if (users == null)
+            return new RestResponse("error", null, "users could not be fetched");
+        return new RestResponse("success", users, null);
+    }
+
     @PostMapping(value= "/password")
     public RestResponse changePassword(@CookieValue(value = "jwt", defaultValue = "token") String token,@RequestBody String newPassword){
         if (!(validator.simpleValidateToken(token)))

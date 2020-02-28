@@ -59,4 +59,17 @@ public class JdbcUserRepository implements UserRepository {
     public Integer updatePassword(Integer userID, String newPassword) {
         return null;
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        String sql = "SELECT USER.ID as ID, firstName, lastName, username, password, roleID, name as role from USER INNER JOIN ROLE ON USER.roleID=ROLE.ID";
+        try {
+            return jdbcTemplate.query(sql,
+                    new UserRowMapper()
+            );
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

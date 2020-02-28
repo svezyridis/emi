@@ -9,4 +9,6 @@ public interface UserRepository {
     User findByUsername(String username);
 
     Integer updatePassword(Integer userID, String newPassword);
+
+    List<User> getAllUsers();
 }

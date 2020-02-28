@@ -23,7 +23,7 @@ public class ClientController {
     Validator validator;
 
     @RequestMapping(value = "/clients")
-    public RestResponse getCases(@CookieValue(value = "jwt", defaultValue = "token") String token) {
+    public RestResponse getClients(@CookieValue(value = "jwt", defaultValue = "token") String token) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
         List<Client> clients = clientRepository.getAllClients();
@@ -33,7 +33,7 @@ public class ClientController {
     }
 
     @PostMapping(value = "/clients")
-    public RestResponse createCase(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Client client) {
+    public RestResponse createClient(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Client client) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
         if (!validateClient(client))
@@ -47,8 +47,12 @@ public class ClientController {
         return new RestResponse("success", null, "client successfully created");
     }
 
+    private boolean validateClient(Client client) {
+        return true;
+    }
+
     @PutMapping(value = "/clients")
-    public RestResponse updateCase(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Client client) {
+    public RestResponse updateClient(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Client client) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
         if (!validateClient(client))
@@ -56,19 +60,19 @@ public class ClientController {
         Integer result = clientRepository.updateClient(client);
         if (result == -1)
             return new RestResponse("error", null, "client could not be updated");
-        return new RestResponse("success", null, "case successfully updated");
+        return new RestResponse("success", null, "client successfully updated");
     }
 
-    @DeleteMapping(value = "/cases")
-    public RestResponse deleteCase(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestParam(value = "caseID", defaultValue = "-1") Integer caseID) {
+    @DeleteMapping(value = "/clients")
+    public RestResponse deleteClient(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestParam(value = "clientID", defaultValue = "-1") Integer clientID) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
-        if (caseID == -1)
-            return new RestResponse("error", null, "case id not provided");
-        Integer result = caseRepository.deleteCase(caseID);
+        if (clientID == -1)
+            return new RestResponse("error", null, "client id not provided");
+        Integer result = clientRepository.deleteClient(clientID);
         if (result == -1)
-            return new RestResponse("error", null, "case could not be deleted");
-        return new RestResponse("success", null, "case successfully deleted");
+            return new RestResponse("error", null, "client could not be deleted");
+        return new RestResponse("success", null, "client successfully deleted");
     }
 
     private boolean validateCase(Case newCase) {
