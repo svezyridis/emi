@@ -41,9 +41,6 @@ public class ClientController {
         Integer clientID = clientRepository.createClient(client);
         if (clientID == -1)
             return new RestResponse("error", null, "client could not be created");
-        Integer result = clientRepository.addPhoneNumbers(clientID, client.getPhoneNumbers());
-        if (result == -1)
-            return new RestResponse("error", null, "phone numbers could not be added");
         return new RestResponse("success", null, "client successfully created");
     }
 
@@ -75,8 +72,4 @@ public class ClientController {
         return new RestResponse("success", null, "client successfully deleted");
     }
 
-    private boolean validateCase(Case newCase) {
-        return newCase.getClientID() != null && newCase.getFolderNo() != null && newCase.getNature() != null
-                && !newCase.getFolderNo().equals("") && !newCase.getNature().equals("");
-    }
 }

@@ -6,10 +6,17 @@ public class Client {
     Integer ID;
     String name;
     String email;
-    String VAT;
-    String firstName;
     String lastName;
-    List<String> phoneNumbers;
+    String phoneNumber;
+    Integer noOfCases;
+
+    public Integer getNoOfCases() {
+        return noOfCases;
+    }
+
+    public void setNoOfCases(Integer noOfCases) {
+        this.noOfCases = noOfCases;
+    }
 
     public Integer getID() {
         return ID;
@@ -35,22 +42,6 @@ public class Client {
         this.email = email;
     }
 
-    public String getVAT() {
-        return VAT;
-    }
-
-    public void setVAT(String VAT) {
-        this.VAT = VAT;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
     }
@@ -59,12 +50,12 @@ public class Client {
         this.lastName = lastName;
     }
 
-    public List<String> getPhoneNumbers() {
-        return phoneNumbers;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhoneNumbers(List<String> phoneNumbers) {
-        this.phoneNumbers = phoneNumbers;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
 

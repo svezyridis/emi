@@ -114,8 +114,8 @@ public class AuthController {
 
     @RequestMapping(value = "/users")
     public RestResponse getUsers(@CookieValue(value = "jwt", defaultValue = "token") String token) {
-        if (!(validator.simpleValidateToken(token)))
-            return new RestResponse("error", null, "invalid token");
+        //if (!(validator.simpleValidateToken(token)))
+          //  return new RestResponse("error", null, "invalid token");
         List<User> users = userRepository.getAllUsers();
         if (users == null)
             return new RestResponse("error", null, "users could not be fetched");

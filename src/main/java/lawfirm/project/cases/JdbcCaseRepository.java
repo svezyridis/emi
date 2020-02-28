@@ -22,6 +22,12 @@ public class JdbcCaseRepository implements CaseRepository {
         @Override
         public Case mapRow(ResultSet rs, int rowNum) throws SQLException {
             Case newCase = new Case();
+            newCase.setUserID(rs.getInt("userID"));
+            newCase.setNature(rs.getString("nature"));
+            newCase.setAssignmentDate(rs.getDate("assignmentDate"));
+            newCase.setCompletionDate(rs.getDate("completionDate"));
+            newCase.setFolderNo(rs.getString("folderNo"));
+            newCase.setClientID(rs.getInt("clientID"));
             return newCase;
         }
     }

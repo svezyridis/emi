@@ -3,6 +3,8 @@ package lawfirm.project;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -21,8 +23,7 @@ public class ProjectApplication {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowCredentials(true).allowedOrigins("http://localhost:3000")
                         .allowedHeaders("*")
-                        .exposedHeaders("Access-Control-Expose-Headers", "Authorization", "Cache-Control", "Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Origin")
-                        .allowCredentials(true)
+                        .exposedHeaders("Access-Control-Expose-Headers", "Authorization", "Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Origin")
                         .allowedMethods("GET", "OPTIONS", "POST", "PUT", "DELETE", "PATCH");
             }
         };
