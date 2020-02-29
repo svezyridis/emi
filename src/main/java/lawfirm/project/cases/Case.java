@@ -75,4 +75,18 @@ public class Case {
     public void setClient(Client client) {
         this.client = client;
     }
+
+    @Override
+    public String toString() {
+        return "Case{" +
+                "id=" + id +
+                ", userID=" + userID +
+                ", nature='" + nature + '\'' +
+                ", folderNo='" + folderNo + '\'' +
+                ", assignmentDate=" + assignmentDate +
+                ", completionDate=" + completionDate +
+                ", clientID=" + clientID +
+                ", client=" + client +
+                '}';
+    }
 }

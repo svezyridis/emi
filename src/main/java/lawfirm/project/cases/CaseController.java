@@ -40,6 +40,7 @@ public class CaseController {
 
     @PostMapping(value = "/cases")
     public RestResponse createCase(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Case newCase) {
+        logger.info(newCase.toString());
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
         if(!validateCase(newCase))
