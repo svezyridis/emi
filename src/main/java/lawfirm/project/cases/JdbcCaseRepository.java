@@ -28,6 +28,7 @@ public class JdbcCaseRepository implements CaseRepository {
             newCase.setCompletionDate(rs.getDate("completionDate"));
             newCase.setFolderNo(rs.getString("folderNo"));
             newCase.setClientID(rs.getInt("clientID"));
+            newCase.setId(rs.getInt("ID"));
             return newCase;
         }
     }
@@ -72,12 +73,12 @@ public class JdbcCaseRepository implements CaseRepository {
     }
 
     @Override
-    public Integer updateCase(Case newCase) {
+    public Integer updateCase(Case newCase, Integer caseID) {
         String sql = "UPDATE CASES SET userID=ifnull(?,userID),nature=ifnull(?,nature),folderNo=ifnull(?,folderNo),assignmentDate=ifnull(?,assignmentDate), completionDate=ifnull(?,completionDate),clientID=ifnull(?,clientID) WHERE ID=?";
         Integer result = -1;
         try {
             result = jdbcTemplate.update(sql, newCase.getUserID(), newCase.getNature(), newCase.getFolderNo(),
-                    newCase.getAssignmentDate(), newCase.getCompletionDate(), newCase.getClientID(),newCase.getId());
+                    newCase.getAssignmentDate(), newCase.getCompletionDate(), newCase.getClientID(),caseID);
         } catch (DataAccessException e) {
             e.printStackTrace();
         }

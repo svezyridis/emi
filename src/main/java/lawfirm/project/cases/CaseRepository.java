@@ -9,7 +9,7 @@ public interface CaseRepository {
 
     Integer createCase(Case newCase);
 
-    Integer updateCase(Case newCase);
+    Integer updateCase(Case newCase,Integer caseID);
 
     Integer deleteCase(Integer caseID);
 }

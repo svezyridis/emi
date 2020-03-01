@@ -1,5 +1,8 @@
 package lawfirm.project;
 
+import lawfirm.project.storage.StorageService;
+import lawfirm.project.storage.StorageProperties;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +29,13 @@ public class ProjectApplication {
                         .exposedHeaders("Access-Control-Expose-Headers", "Authorization", "Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Origin")
                         .allowedMethods("GET", "OPTIONS", "POST", "PUT", "DELETE", "PATCH");
             }
+        };
+    }
+
+    @Bean
+    CommandLineRunner init(StorageService storageService) {
+        return (args) -> {
+            storageService.init();
         };
     }
 
