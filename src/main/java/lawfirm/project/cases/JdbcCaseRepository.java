@@ -1,5 +1,6 @@
 package lawfirm.project.cases;
 
+import lawfirm.project.auth.JdbcUserRepository;
 import lawfirm.project.auth.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -95,6 +96,21 @@ public class JdbcCaseRepository implements CaseRepository {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public Case getCase(Integer caseID) {
+        String sql= "SELECT * FROM CASES WHERE ID=?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql,
+                    new Object[]{caseID},
+                    new CaseRowMapper()
+            );
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

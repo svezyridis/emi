@@ -48,24 +48,22 @@ public class ClientController {
         return true;
     }
 
-    @PutMapping(value = "/clients")
-    public RestResponse updateClient(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Client client) {
+    @PutMapping(value = "/clients/{clientID}")
+    public RestResponse updateClient(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Client client, @PathVariable Integer clientID) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
         if (!validateClient(client))
             return new RestResponse("error", null, "missing case attributes");
-        Integer result = clientRepository.updateClient(client);
+        Integer result = clientRepository.updateClient(client, clientID);
         if (result == -1)
             return new RestResponse("error", null, "client could not be updated");
         return new RestResponse("success", null, "client successfully updated");
     }
 
-    @DeleteMapping(value = "/clients")
-    public RestResponse deleteClient(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestParam(value = "clientID", defaultValue = "-1") Integer clientID) {
+    @DeleteMapping(value = "/clients/{clientID}")
+    public RestResponse deleteClient(@CookieValue(value = "jwt", defaultValue = "token") String token, @PathVariable Integer clientID) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
-        if (clientID == -1)
-            return new RestResponse("error", null, "client id not provided");
         Integer result = clientRepository.deleteClient(clientID);
         if (result == -1)
             return new RestResponse("error", null, "client could not be deleted");

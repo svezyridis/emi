@@ -12,4 +12,6 @@ public interface CaseRepository {
     Integer updateCase(Case newCase,Integer caseID);
 
     Integer deleteCase(Integer caseID);
+
+    Case getCase(Integer caseID);
 }

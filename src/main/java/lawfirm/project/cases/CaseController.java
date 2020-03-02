@@ -37,10 +37,13 @@ public class CaseController {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
         List<Case> cases = null;
-        if (userID == -1)
-            cases = caseRepository.getAllCases();
-        else
+        if (userID != -1)
             cases = caseRepository.getCasesOfUser(userID);
+        else if (caseID != -1)
+            cases=caseRepository.getCase(caseID);
+        else
+            cases = caseRepository.getAllCases();
+
         if (cases == null)
             return new RestResponse("error", null, "cases could not be fetched");
         return new RestResponse("success", cases, "cases successfully fetched");
@@ -52,10 +55,10 @@ public class CaseController {
         logger.info(newCase.toString());
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
-        if(!validateCase(newCase))
+        if (!validateCase(newCase))
             return new RestResponse("error", null, "missing case attributes");
-        Integer result=caseRepository.createCase(newCase);
-        if(result==-1)
+        Integer result = caseRepository.createCase(newCase);
+        if (result == -1)
             return new RestResponse("error", null, "case could not be created");
         return new RestResponse("success", null, "case successfully created");
     }
@@ -64,10 +67,10 @@ public class CaseController {
     public RestResponse updateCase(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Case newCase, @PathVariable Integer caseID) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
-        if(!validateCase(newCase))
+        if (!validateCase(newCase))
             return new RestResponse("error", null, "missing case attributes");
-        Integer result=caseRepository.updateCase(newCase,caseID);
-        if(result==-1)
+        Integer result = caseRepository.updateCase(newCase, caseID);
+        if (result == -1)
             return new RestResponse("error", null, "case could not be updated");
         return new RestResponse("success", null, "case successfully updated");
     }
@@ -76,8 +79,8 @@ public class CaseController {
     public RestResponse deleteCase(@CookieValue(value = "jwt", defaultValue = "token") String token, @PathVariable Integer caseID) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
-        Integer result=caseRepository.deleteCase(caseID);
-        if(result==-1)
+        Integer result = caseRepository.deleteCase(caseID);
+        if (result == -1)
             return new RestResponse("error", null, "case could not be deleted");
         return new RestResponse("success", null, "case successfully deleted");
     }

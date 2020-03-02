@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lawfirm.project.RestResponse;
 import lawfirm.project.storage.StorageFileNotFoundException;
 import lawfirm.project.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,24 +35,24 @@ public class FileUploadController {
         this.storageService = storageService;
     }
 
-    @GetMapping("/files/{folderNo}/{filename:.+}")
+    @GetMapping("/files/{caseID}/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename, @PathVariable String folderNo) {
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename, @PathVariable String caseID) {
 
-        Resource file = storageService.loadAsResource(filename, folderNo);
+        Resource file = storageService.loadAsResource(filename, caseID);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
     @PostMapping("/files/{caseID}")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,@PathVariable String caseID,
-                                   RedirectAttributes redirectAttributes) {
+    public RestResponse handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable String caseID,
+                                         RedirectAttributes redirectAttributes) {
 
         storageService.store(file,caseID);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
-        return "redirect:/";
+        return new RestResponse("success",null,"file saved successfully");
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

@@ -102,6 +102,11 @@ public class AuthController {
         }
     }
 
+    @RequestMapping("/api")
+    public RestResponse test() {
+        return new RestResponse("gogog","gogogo","gogogo");
+    }
+
     @RequestMapping(value = "/roles")
     public RestResponse getRoles(@CookieValue(value = "jwt", defaultValue = "token") String token) {
         if (!(validator.simpleValidateToken(token)))

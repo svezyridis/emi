@@ -60,12 +60,26 @@ public class JdbcClientRepository implements ClientRepository {
     }
 
     @Override
-    public Integer updateClient(Client client) {
-        return null;
+    public Integer updateClient(Client client,Integer clientID) {
+        String sql = "UPDATE CLIENT SET name=ifnull(?,name),lastName=ifnull(?,lastName),email=ifnull(?,email),phone=ifnull(?,phone) WHERE ID=?";
+        Integer result = -1;
+        try {
+            result = jdbcTemplate.update(sql,client.getName(),client.getLastName(),client.getEmail(),client.getPhoneNumber(),clientID);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public Integer deleteClient(Integer clientID) {
-        return null;
+        String sql = "DELETE FROM CLIENT WHERE ID=?";
+        Integer result = -1;
+        try {
+            result = jdbcTemplate.update(sql,clientID);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

@@ -9,7 +9,7 @@ public interface ClientRepository {
 
     Integer addPhoneNumbers(Integer clientID, List<String> phoneNumbers);
 
-    Integer updateClient(Client client);
+    Integer updateClient(Client client, Integer clientID);
 
     Integer deleteClient(Integer clientID);
 }
