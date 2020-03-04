@@ -1,4 +1,4 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.models;
 
 import java.util.List;
 

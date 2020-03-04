@@ -1,12 +1,12 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.repositories;
 
-import lawfirm.project.auth.JdbcUserRepository;
 import lawfirm.project.auth.User;
+import lawfirm.project.cases.models.Attachment;
+import lawfirm.project.cases.models.Case;
+import lawfirm.project.cases.models.Note;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +31,37 @@ public class JdbcCaseRepository implements CaseRepository {
             newCase.setClientID(rs.getInt("clientID"));
             newCase.setId(rs.getInt("ID"));
             return newCase;
+        }
+    }
+
+    private class AttachmentRowMapper implements RowMapper<Attachment> {
+        @Override
+        public Attachment mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Attachment attachment=new Attachment();
+            attachment.setFilename(rs.getString("filename"));
+            attachment.setCaseID(rs.getInt("caseID"));
+            attachment.setAddedOn(rs.getTimestamp("addedOn"));
+            User user=new User();
+            user.setFirstName(rs.getString("firstName"));
+            user.setLastName(rs.getString("lastName"));
+            attachment.setUser(user);
+            return  attachment;
+        }
+    }
+
+    private class NoteRowMapper implements RowMapper<Note> {
+        @Override
+        public Note mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Note note=new Note();
+            note.setId(rs.getInt("ID"));
+            note.setCaseID(rs.getInt("caseID"));
+            note.setText(rs.getString("todoText"));
+            note.setTime(rs.getTimestamp("time"));
+            User user=new User();
+            user.setFirstName(rs.getString("firstName"));
+            user.setLastName(rs.getString("lastName"));
+            note.setUser(user);
+            return note;
         }
     }
 
@@ -111,6 +142,72 @@ public class JdbcCaseRepository implements CaseRepository {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public List<Attachment> getCaseAttachments(Integer caseID) {
+        String sql = "SELECT ATTACHMENT.ID, filename, caseID, addedOn, userID, firstName, lastName, username, password, roleID from ATTACHMENT INNER JOIN USER ON ATTACHMENT.userID=USER.ID WHERE caseID=?";
+        try {
+            return jdbcTemplate.query(sql,
+                    new Object[]{caseID},
+                    new AttachmentRowMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<Note> getCaseNotes(Integer caseID) {
+        String sql = "SELECT NOTE.ID, caseID, userID, todoText, time, firstName, lastName, username, password, roleID from NOTE INNER JOIN USER ON NOTE.userID=USER.ID WHERE caseID=?";
+        try {
+            return jdbcTemplate.query(sql,
+                    new Object[]{caseID},
+                    new NoteRowMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Integer createNote(Note note) {
+        String sql = "INSERT INTO NOTE (caseID, userID, todoText, time) VALUES (?,?,?,NOW())";
+        Integer result = -1;
+        try {
+            result = jdbcTemplate.update(sql,note.getCaseID(),note.getUserID(),note.getText());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public List<Case> getCasesOfClient(Integer clientID) {
+        String sql = "SELECT * from CASES WHERE clientID=?";
+        try {
+            return jdbcTemplate.query(sql,
+                    new Object[]{clientID},
+                    new CaseRowMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Integer addAttachment(Integer caseID,Integer userID,String filename) {
+        String sql = "INSERT INTO ATTACHMENT  (filename, caseID, addedOn, userID) VALUES (?,?,now(),?)";
+        Integer result = -1;
+        try {
+            result = jdbcTemplate.update(sql,filename,caseID,userID);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            if (e.getRootCause().getMessage().startsWith("Duplicate entry")) {
+                return 0;
+            }
+        }
+        return result;
     }
 
 }

@@ -28,7 +28,7 @@ public class FileSystemStorageService implements StorageService {
 	}
 
 	@Override
-	public void store(MultipartFile file, String caseID) {
+	public boolean store(MultipartFile file, String caseID) {
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 		try {
 			if (file.isEmpty()) {
@@ -52,6 +52,7 @@ public class FileSystemStorageService implements StorageService {
 		catch (IOException e) {
 			throw new StorageException("Failed to store file " + filename, e);
 		}
+		return true;
 	}
 
 	@Override

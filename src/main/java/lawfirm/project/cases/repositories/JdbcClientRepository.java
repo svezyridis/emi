@@ -1,5 +1,6 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.repositories;
 
+import lawfirm.project.cases.models.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

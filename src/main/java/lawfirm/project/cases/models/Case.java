@@ -1,6 +1,7 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.models;
 
 import java.sql.Date;
+import java.util.List;
 
 public class Case {
     Integer id;
@@ -11,6 +12,24 @@ public class Case {
     Date completionDate;
     Integer clientID;
     Client client;
+    List<Attachment> attachments;
+    List<Note> notes;
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+    }
 
     public Integer getId() {
         return id;

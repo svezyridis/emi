@@ -1,4 +1,4 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.models;
 
 import lawfirm.project.auth.User;
 
@@ -9,7 +9,16 @@ public class Note {
     Integer id;
     Integer caseID;
     Timestamp time;
+    Integer userID;
     User user;
+
+    public Integer getUserID() {
+        return userID;
+    }
+
+    public void setUserID(Integer userID) {
+        this.userID = userID;
+    }
 
     public String getText() {
         return text;
@@ -49,5 +58,17 @@ public class Note {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "text='" + text + '\'' +
+                ", id=" + id +
+                ", caseID=" + caseID +
+                ", time=" + time +
+                ", userID=" + userID +
+                ", user=" + user +
+                '}';
     }
 }

@@ -1,4 +1,4 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.models;
 
 import lawfirm.project.auth.User;
 
@@ -9,7 +9,16 @@ public class Attachment {
     String filename;
     Timestamp addedOn;
     Integer caseID;
+    Integer userID;
     User user;
+
+    public Integer getUserID() {
+        return userID;
+    }
+
+    public void setUserID(Integer userID) {
+        this.userID = userID;
+    }
 
     public Integer getID() {
         return ID;

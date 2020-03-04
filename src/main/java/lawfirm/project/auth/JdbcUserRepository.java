@@ -29,16 +29,41 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
+    private class RoleRowMapper implements RowMapper<Role> {
+        @Override
+        public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Role role=new Role();
+            role.setID(rs.getInt("ID"));
+            role.setRole(rs.getString("name"));
+            return role;
+        }
+    }
+
 
 
     @Override
-    public Integer createUser(User newUser) {
-        return null;
+    public Integer createUser(User user) {
+        String sql = "INSERT INTO USER (firstName, lastName, username, password, roleID) VALUES (?,?,?,?,?)";
+        Integer result = -1;
+        try {
+            result = jdbcTemplate.update(sql,user.getFirstName(),user.getLastName(),user.getUsername(),user.getPassword(),user.getRoleID());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public List<Role> getRoles() {
-        return null;
+        String sql = "SELECT * FROM ROLE";
+        try {
+            return jdbcTemplate.query(sql,
+                    new RoleRowMapper()
+            );
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -71,5 +96,17 @@ public class JdbcUserRepository implements UserRepository {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public Integer deleteUser(Integer userID) {
+        String sql = "DELETE FROM USER WHERE ID=?";
+        Integer result = -1;
+        try {
+            result = jdbcTemplate.update(sql,userID);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

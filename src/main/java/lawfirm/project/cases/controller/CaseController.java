@@ -1,20 +1,18 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.controller;
 
 import lawfirm.project.RestResponse;
 import lawfirm.project.Validator;
-import lawfirm.project.auth.AuthController;
-import lawfirm.project.storage.FileUploadController;
+import lawfirm.project.cases.models.Note;
+import lawfirm.project.cases.repositories.CaseRepository;
+import lawfirm.project.cases.models.Case;
 import lawfirm.project.storage.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class CaseController {
@@ -32,15 +30,21 @@ public class CaseController {
     StorageService storageService;
 
     @RequestMapping(value = "/cases")
-    public RestResponse getCases(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestParam(value = "userID", defaultValue = "-1") Integer userID,
+    public RestResponse getCases(@CookieValue(value = "jwt", defaultValue = "token") String token,@RequestParam(value = "clientID",defaultValue = "-1") Integer clientID, @RequestParam(value = "userID", defaultValue = "-1") Integer userID,
                                  @RequestParam(value = "caseID", defaultValue = "-1") Integer caseID) {
         if (!validator.simpleValidateToken(token))
             return new RestResponse("error", null, "invalid token");
         List<Case> cases = null;
         if (userID != -1)
             cases = caseRepository.getCasesOfUser(userID);
-        else if (caseID != -1)
-            cases=caseRepository.getCase(caseID);
+        else if(clientID!=-1)
+            cases =caseRepository.getCasesOfClient(clientID);
+        else if (caseID != -1) {
+            Case myCase = caseRepository.getCase(caseID);
+            myCase.setAttachments(caseRepository.getCaseAttachments(myCase.getId()));
+            myCase.setNotes(caseRepository.getCaseNotes(myCase.getId()));
+            return new RestResponse("success", myCase, "case successfully fetched");
+        }
         else
             cases = caseRepository.getAllCases();
 
@@ -61,6 +65,23 @@ public class CaseController {
         if (result == -1)
             return new RestResponse("error", null, "case could not be created");
         return new RestResponse("success", null, "case successfully created");
+    }
+
+    @PostMapping(value = "/notes")
+    public RestResponse createCase(@CookieValue(value = "jwt", defaultValue = "token") String token, @RequestBody Note note) {
+        logger.info(note.toString());
+        if (!validator.simpleValidateToken(token))
+            return new RestResponse("error", null, "invalid token");
+        if (!validateNote(note))
+            return new RestResponse("error", null, "missing note attributes");
+        Integer result = caseRepository.createNote(note);
+        if (result == -1)
+            return new RestResponse("error", null, "note could not be created");
+        return new RestResponse("success", null, "note successfully created");
+    }
+
+    private boolean validateNote(Note note) {
+        return note.getUserID() != null && !note.getText().equals(null) && !note.getText().equals("") && note.getCaseID() != null;
     }
 
     @PutMapping(value = "/cases/{caseID}")

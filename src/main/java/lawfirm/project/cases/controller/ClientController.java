@@ -1,7 +1,9 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.controller;
 
 import lawfirm.project.RestResponse;
 import lawfirm.project.Validator;
+import lawfirm.project.cases.repositories.ClientRepository;
+import lawfirm.project.cases.models.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

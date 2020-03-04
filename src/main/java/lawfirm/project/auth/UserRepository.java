@@ -11,4 +11,6 @@ public interface UserRepository {
     Integer updatePassword(Integer userID, String newPassword);
 
     List<User> getAllUsers();
+
+    Integer deleteUser(Integer userID);
 }

@@ -1,4 +1,8 @@
-package lawfirm.project.cases;
+package lawfirm.project.cases.repositories;
+
+import lawfirm.project.cases.models.Attachment;
+import lawfirm.project.cases.models.Client;
+import lawfirm.project.cases.models.Note;
 
 import java.util.List;
 
@@ -12,4 +16,5 @@ public interface ClientRepository {
     Integer updateClient(Client client, Integer clientID);
 
     Integer deleteClient(Integer clientID);
+
 }
